@@ -1,6 +1,9 @@
 # xplora
 For the Chrome Built-In AI Hackathon 2024
 
+## Notes:
+logo colour - #9c05fa
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

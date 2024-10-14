@@ -1,34 +1,44 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import React, { useState } from "react";
+import "./globals.css";
+import xploraLogo from "./assets/xplora-no-bg.png";
+import DestinationSearch from "./panels/DestinationSearch";
+import ViewDestination from "./panels/ViewDestination";
+import { AlertComponent } from "./utils/alert";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [showViewDestination, setShowViewDestination] = useState(false);
+  const [destination, setDestination] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleGoClick = (value: string) => {
+    if (value.trim().length > 0) {
+      setDestination(value);
+      setShowViewDestination(true);
+      setErrorMessage("");
+    } else {
+      setShowViewDestination(false);
+      setErrorMessage("You need to enter a destination.");
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <body>
+        <div className="container">
+          <img src={xploraLogo} className="logo" alt="Xplora logo" />
+          {/* <h1>Xplora</h1> */}
+          <p>Your AI Travel Companion</p>
+        </div>
+        <div className="container">
+          <DestinationSearch onGoClick={handleGoClick} />
+        </div>
+        {errorMessage && <AlertComponent message={errorMessage} />}
+        {showViewDestination && (
+          <div className="container fade-in">
+            <ViewDestination destination={destination} />
+          </div>
+        )}
+      </body>
     </>
   );
 }
