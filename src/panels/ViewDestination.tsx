@@ -10,11 +10,6 @@ function ViewDestination({ destination }: ViewDestinationProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(
-      "Unsplash Access Key:",
-      import.meta.env.VITE_UNSPLASH_ACCESS_KEY
-    );
-
     const fetchImage = async () => {
       try {
         const response = await axios.get(
