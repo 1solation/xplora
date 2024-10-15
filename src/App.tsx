@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./globals.css";
 import xploraLogo from "./assets/xplora-no-bg.png";
 import DestinationSearch from "./panels/DestinationSearch";
