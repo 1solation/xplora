@@ -19,11 +19,11 @@ function DestinationSearch({ onGoClick }: DestinationSearchProps) {
 
   return (
     <div className="panel">
-      <h2>Enter your destination to get started</h2>
+      <h2>Where are you going?</h2>
       <div className="input-button-container">
         <Input
           type="text"
-          placeholder="Enter your destination"
+          placeholder="Enter a city or town"
           onChange={handleChange}
         />
         <Button variant="secondary" onClick={handleClick}>

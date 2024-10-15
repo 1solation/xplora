@@ -100,6 +100,44 @@
   margin-bottom: 20px;
 }
 
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Optional: Add some margin to separate the image from the title */
+}
+
+.image-container img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Add some margin to separate the button from the image */
+}
+
+.fade-in-button {
+  display: block;
+  margin: 20px auto 0; /* Center the button horizontally and add margin on top */
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
