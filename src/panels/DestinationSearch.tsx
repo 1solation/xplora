@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -8,13 +8,47 @@ interface DestinationSearchProps {
 
 function DestinationSearch({ onGoClick }: DestinationSearchProps) {
   const [inputValue, setInputValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
+  useEffect(() => {
+    const loadGoogleMaps = () => {
+      if (inputRef.current) {
+        console.log("Initializing Google Maps Autocomplete...");
+        const autocomplete = new window.google.maps.places.Autocomplete(
+          inputRef.current,
+          {
+            types: ["(cities)"],
+          }
+        );
+
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+          if (place && place.formatted_address) {
+            console.log("Place selected:", place.formatted_address);
+            setInputValue(place.formatted_address);
+          }
+        });
+      }
+    };
+
+    if (window.google) {
+      loadGoogleMaps();
+    } else {
+      const intervalId = setInterval(() => {
+        if (window.google) {
+          clearInterval(intervalId);
+          loadGoogleMaps();
+        }
+      }, 100);
+    }
+  }, []);
 
   const handleClick = () => {
-    onGoClick(inputValue);
+    if (inputValue.trim().length > 0) {
+      onGoClick(inputValue);
+    } else {
+      alert("Please enter a valid location.");
+    }
   };
 
   return (
@@ -24,7 +58,9 @@ function DestinationSearch({ onGoClick }: DestinationSearchProps) {
         <Input
           type="text"
           placeholder="Enter a city or town"
-          onChange={handleChange}
+          ref={inputRef}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <Button variant="secondary" onClick={handleClick}>
           Go
