@@ -1,53 +1,31 @@
-import { useState, useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import MapWrapper from "@/components/MapWrapper";
+import SearchBar from "@/components/SearchBar";
 
 interface DestinationSearchProps {
   onGoClick: (value: string) => void;
 }
 
-function DestinationSearch({ onGoClick }: DestinationSearchProps) {
+const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGoClick }) => {
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [center, setCenter] = useState<google.maps.LatLngLiteral | null>(null);
+  const [zoom, setZoom] = useState(2);
 
-  useEffect(() => {
-    const loadGoogleMaps = () => {
-      if (inputRef.current) {
-        console.log("Initializing Google Maps Autocomplete...");
-        const autocomplete = new window.google.maps.places.Autocomplete(
-          inputRef.current,
-          {
-            types: ["(cities)"],
-          }
-        );
-
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
-          if (place && place.formatted_address) {
-            console.log("Place selected:", place.formatted_address);
-            setInputValue(place.formatted_address);
-          }
-        });
-      }
-    };
-
-    if (window.google) {
-      loadGoogleMaps();
-    } else {
-      const intervalId = setInterval(() => {
-        if (window.google) {
-          clearInterval(intervalId);
-          loadGoogleMaps();
-        }
-      }, 100);
-    }
-  }, []);
-
-  const handleClick = () => {
-    if (inputValue.trim().length > 0) {
-      onGoClick(inputValue);
-    } else {
-      alert("Please enter a valid location.");
+  const handlePlaceSelected = (place: google.maps.places.PlaceResult) => {
+    if (
+      place &&
+      place.formatted_address &&
+      place.geometry &&
+      place.geometry.location
+    ) {
+      const formattedAddress = place.formatted_address;
+      setInputValue(formattedAddress);
+      setCenter({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+      setZoom(12);
+      onGoClick(formattedAddress); // Call onGoClick directly when a place is selected
     }
   };
 
@@ -55,19 +33,24 @@ function DestinationSearch({ onGoClick }: DestinationSearchProps) {
     <div className="panel">
       <h2>Where are you going?</h2>
       <div className="input-button-container">
-        <Input
-          type="text"
-          placeholder="Enter a city or town"
-          ref={inputRef}
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+        <SearchBar
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+          onPlaceSelected={handlePlaceSelected}
+          libraries={["places"]}
+          inputAutocompleteValue={inputValue}
+          options={{ types: ["(cities)"] }}
         />
-        <Button variant="secondary" onClick={handleClick}>
-          Go
-        </Button>
       </div>
+      {center && (
+        <MapWrapper
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+          center={center}
+          zoom={zoom}
+          onLoad={() => {}}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default DestinationSearch;
