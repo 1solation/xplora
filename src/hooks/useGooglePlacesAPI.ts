@@ -21,18 +21,29 @@ export const useGooglePlacesAPI = ({
 
   useEffect(() => {
     const loadScript = () => {
-      const script = document.createElement("script");
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=${libraries.join(
-        ","
-      )}&language=${language || "en"}`;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => initializeAutocomplete();
-      document.head.appendChild(script);
+      if (!document.querySelector(`script[src*="maps.googleapis.com"]`)) {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=${libraries.join(
+          ","
+        )}&language=${language || "en"}`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => initializeAutocomplete();
+        document.head.appendChild(script);
+      } else {
+        if (window.google) {
+          initializeAutocomplete();
+        } else {
+          const existingScript = document.querySelector(
+            `script[src*="maps.googleapis.com"]`
+          );
+          existingScript?.addEventListener("load", initializeAutocomplete);
+        }
+      }
     };
 
     const initializeAutocomplete = () => {
-      if (inputRef.current) {
+      if (inputRef.current && window.google) {
         const autocomplete = new window.google.maps.places.Autocomplete(
           inputRef.current,
           options

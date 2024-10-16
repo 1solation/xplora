@@ -20,8 +20,6 @@ const SearchBar = (props: any) => {
     libraries,
     inputAutocompleteValue,
     options,
-    googleMapScriptBaseUrl,
-    refProp,
     language,
     ...rest
   } = props;

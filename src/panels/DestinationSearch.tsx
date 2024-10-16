@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/Button";
 import MapWrapper from "@/components/MapWrapper";
 import SearchBar from "@/components/SearchBar";
 
@@ -19,20 +18,14 @@ const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGoClick }) => {
       place.geometry &&
       place.geometry.location
     ) {
-      setInputValue(place.formatted_address);
+      const formattedAddress = place.formatted_address;
+      setInputValue(formattedAddress);
       setCenter({
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       });
       setZoom(12);
-    }
-  };
-
-  const handleClick = () => {
-    if (inputValue.trim().length > 0) {
-      onGoClick(inputValue);
-    } else {
-      alert("Please enter a valid location.");
+      onGoClick(formattedAddress); // Call onGoClick directly when a place is selected
     }
   };
 
@@ -47,9 +40,6 @@ const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGoClick }) => {
           inputAutocompleteValue={inputValue}
           options={{ types: ["(cities)"] }}
         />
-        <Button variant="secondary" onClick={handleClick}>
-          Go
-        </Button>
       </div>
       {center && (
         <MapWrapper
