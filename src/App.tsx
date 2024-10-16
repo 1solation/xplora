@@ -23,22 +23,19 @@ function App() {
 
   return (
     <>
-      <body>
-        <div className="container">
-          <img src={xploraLogo} className="logo" alt="Xplora logo" />
-          {/* <h1>Xplora</h1> */}
-          <p>Your AI Travel Companion</p>
+      <div className="container">
+        <img src={xploraLogo} className="logo" alt="Xplora logo" />
+        <p>Your AI Travel Companion</p>
+      </div>
+      <div className="container">
+        <DestinationSearch onGoClick={handleGoClick} />
+      </div>
+      {errorMessage && <AlertComponent message={errorMessage} />}
+      {showViewDestination && (
+        <div className="container fade-in">
+          <ViewDestination destination={destination} />
         </div>
-        <div className="container">
-          <DestinationSearch onGoClick={handleGoClick} />
-        </div>
-        {errorMessage && <AlertComponent message={errorMessage} />}
-        {showViewDestination && (
-          <div className="container fade-in">
-            <ViewDestination destination={destination} />
-          </div>
-        )}
-      </body>
+      )}
     </>
   );
 }

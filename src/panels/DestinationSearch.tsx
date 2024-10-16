@@ -1,37 +1,56 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import MapWrapper from "@/components/MapWrapper";
+import SearchBar from "@/components/SearchBar";
 
 interface DestinationSearchProps {
   onGoClick: (value: string) => void;
 }
 
-function DestinationSearch({ onGoClick }: DestinationSearchProps) {
+const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGoClick }) => {
   const [inputValue, setInputValue] = useState("");
+  const [center, setCenter] = useState<google.maps.LatLngLiteral | null>(null);
+  const [zoom, setZoom] = useState(2);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleClick = () => {
-    onGoClick(inputValue);
+  const handlePlaceSelected = (place: google.maps.places.PlaceResult) => {
+    if (
+      place &&
+      place.formatted_address &&
+      place.geometry &&
+      place.geometry.location
+    ) {
+      const formattedAddress = place.formatted_address;
+      setInputValue(formattedAddress);
+      setCenter({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+      setZoom(12);
+      onGoClick(formattedAddress); // Call onGoClick directly when a place is selected
+    }
   };
 
   return (
     <div className="panel">
       <h2>Where are you going?</h2>
       <div className="input-button-container">
-        <Input
-          type="text"
-          placeholder="Enter a city or town"
-          onChange={handleChange}
+        <SearchBar
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+          onPlaceSelected={handlePlaceSelected}
+          libraries={["places"]}
+          inputAutocompleteValue={inputValue}
+          options={{ types: ["(cities)"] }}
         />
-        <Button variant="secondary" onClick={handleClick}>
-          Go
-        </Button>
       </div>
+      {center && (
+        <MapWrapper
+          apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+          center={center}
+          zoom={zoom}
+          onLoad={() => {}}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default DestinationSearch;

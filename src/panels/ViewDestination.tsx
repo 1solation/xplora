@@ -13,19 +13,24 @@ function ViewDestination({ destination }: ViewDestinationProps) {
     const fetchImage = async () => {
       try {
         const response = await axios.get(
-          "https://api.unsplash.com/search/photos",
+          `https://maps.googleapis.com/maps/api/place/findplacefromtext/json`,
           {
             params: {
-              query: destination,
-              client_id: import.meta.env.VITE_UNSPLASH_ACCESS_KEY, // Read API key from environment variables
-              per_page: 1,
-              orientation: "landscape",
+              input: destination,
+              inputtype: "textquery",
+              fields: "photos",
+              key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
             },
           }
         );
 
-        if (response.data.results.length > 0) {
-          setImageUrl(response.data.results[0].urls.regular);
+        if (response.data.candidates.length > 0) {
+          const photoReference =
+            response.data.candidates[0].photos[0].photo_reference;
+          const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photoReference}&key=${
+            import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+          }`;
+          setImageUrl(photoUrl);
         } else {
           setImageUrl(null);
         }
