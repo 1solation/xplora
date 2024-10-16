@@ -13,7 +13,6 @@ export const useGooglePlacesAPI = ({
   apiKey,
   onPlaceSelected,
   libraries,
-  inputAutocompleteValue,
   options,
   language,
 }: UseGooglePlacesAPIProps) => {
