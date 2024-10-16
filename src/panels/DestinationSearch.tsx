@@ -31,7 +31,7 @@ const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGoClick }) => {
 
   return (
     <div className="panel">
-      <h2>Where are you going?</h2>
+      <h2>Enter a city to get started</h2>
       <div className="input-button-container">
         <SearchBar
           apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
