@@ -1,5 +1,5 @@
 import { HandIcon } from "@radix-ui/react-icons";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface AlertProps {
   message: string;
