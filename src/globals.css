@@ -275,6 +275,15 @@ button:focus-visible {
   animation: fadeIn 0.5s ease-in-out;
 }
 
+.fade-in-destination-img {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+
+.fade-in.visible {
+  opacity: 1;
+}
+
 @layer base {
   * {
     @apply border-border;
