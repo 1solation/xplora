@@ -74,8 +74,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Stack panels vertically */
+  /* height: 100vh; Full viewport height */
+  text-align: center;
+  width: 80%; /* Set width to 80% of the window width */
+  max-width: 600px; /* Optional: limit the max width */
+  min-width: 320px; /* Set a minimum width */
+  margin: 0 auto; /* Center the container horizontally */
+}
+
 .panel {
-  background-color: #9e66ab;
+  background-color: #9e66ab; /* Background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow for better visibility */
+  border-radius: 8px; /* Rounded corners */  width: 100%; /* Full width of the container */
+  margin: 20px 0; /* Space between panels */
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
@@ -89,15 +105,6 @@
   display: flex;
   align-items: center;
   gap: 10px; /* Adjust the gap as needed */
-}
-
-.container {
-  text-align: center;
-  /* padding: 20px; */
-  width: 80%; /* Set width to 80% of the window width */
-  max-width: 600px; /* Optional: limit the max width */
-  min-width: 320px; /* Set a minimum width */
-  margin-bottom: 20px;
 }
 
 .image-container {

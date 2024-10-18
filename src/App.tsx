@@ -25,7 +25,7 @@ function App() {
     <>
       <div className="container">
         <img src={xploraLogo} className="logo" alt="Xplora logo" />
-        <p>Your AI Travel Companion</p>
+        <p>Your AI Travel Assistant</p>
       </div>
       <div className="container">
         <DestinationSearch onGoClick={handleGoClick} />
