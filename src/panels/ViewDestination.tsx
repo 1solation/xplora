@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ProfileForm } from "./FormPromptBuilder";
 
 interface ViewDestinationProps {
   destination: string;
@@ -6,6 +7,7 @@ interface ViewDestinationProps {
 
 function ViewDestination({ destination }: ViewDestinationProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const profileFormRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
@@ -39,7 +41,10 @@ function ViewDestination({ destination }: ViewDestinationProps) {
         ) {
           const place = results[0];
           if (place.photos && place.photos.length > 0) {
-            const photoUrl = place.photos[0].getUrl({ maxWidth: 800 });
+            const photoUrl = place.photos[0].getUrl({
+              maxWidth: 400,
+              maxHeight: 400,
+            });
             setImageUrl(photoUrl);
           } else {
             setImageUrl(null);
@@ -58,19 +63,35 @@ function ViewDestination({ destination }: ViewDestinationProps) {
     }
   }, [destination]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentProfileFormRef = profileFormRef.current;
+    if (currentProfileFormRef) {
+      observer.observe(currentProfileFormRef);
+    }
+
+    return () => {
+      if (currentProfileFormRef) {
+        observer.unobserve(currentProfileFormRef);
+      }
+    };
+  }, []);
+
   return (
-    <div className="panel" style={{ textAlign: "center" }}>
-      <h2>Destination Details</h2>
+    <div className="panel">
+      <h2>Destination Details:</h2>
       <p>You're going to {destination}!</p>
-      <div
-        className="image-container"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "400px",
-        }}
-      >
+      <div className="image-container">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -80,6 +101,10 @@ function ViewDestination({ destination }: ViewDestinationProps) {
         ) : (
           <p>No image available</p>
         )}
+      </div>
+      <h2>Tell me a little more about your trip...</h2>
+      <div ref={profileFormRef} className=".fade-in-destination-img">
+        <ProfileForm />
       </div>
     </div>
   );
